@@ -39,6 +39,22 @@ class User {
             result({ kind: 'not_found' }, null);
         });
     }
+    static findByLoginCredentials(mail, password, result) {
+        db.query('SELECT * FROM users WHERE mail = ? AND password = ?', [mail, password], (err, res) => {
+            if (err) {
+                console.log('error: ', err);
+                result(err, null);
+                return;
+            }
+
+            if (res.length) {
+                result(null, res[0]);
+                return;
+            }
+
+            result({ kind: 'not_found' }, null);
+        });
+    }
     static getAll(result) {
         db.query('SELECT * FROM users', (err, res) => {
             if (err) {

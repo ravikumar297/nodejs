@@ -1,4 +1,5 @@
 const User = require('../models/user.model.js');
+const responseHandler = require('../utlis/responseHandler.js');
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -52,7 +53,20 @@ exports.findOne = (req, res) => {
   });
 };
 
+exports.findLoginUser = (req, res) => { 
+  User.findByLoginCredentials(req.body.mail, req.body.password, (err, data) => {
+    if (err) {
+      if (err.kind === 'not_found') {
+          return responseHandler.handleError(res, err, `Not found User with mail ${req.params.mail}.`, 404);
+      } else {
+          return responseHandler.handleError(res, err, `Login failed with invalid creadentials ${req.params.mail}.`, 500);
+      }
+    } else responseHandler.handleSuccess(res, 'User retrieved successfully!', data);
+  });
+};
+
 exports.update = (req, res) => {
+
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'

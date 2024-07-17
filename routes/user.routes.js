@@ -11,6 +11,9 @@ router.get('/users', users.findAll);
 // Retrieve a single User with id
 router.get('/user/:id', users.findOne);
 
+// Retrieve a single User with login creadentials
+router.get('/login', users.findLoginUser);
+
 // Update a User with id
 router.put('/user/:id', users.update);
 
